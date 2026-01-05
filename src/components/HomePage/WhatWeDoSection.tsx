@@ -51,12 +51,13 @@ export default function WhatWeDoSection() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    if (!section || !track) return;
+  const section = sectionRef.current;
+  const track = trackRef.current;
+  if (!section || !track) return;
 
-    const scrollWidth = track.scrollWidth - window.innerWidth;
+  const scrollWidth = track.scrollWidth - window.innerWidth;
 
+  const ctx = gsap.context(() => {
     gsap.to(track, {
       x: -scrollWidth,
       ease: "none",
@@ -69,11 +70,13 @@ export default function WhatWeDoSection() {
         anticipatePin: 1,
       },
     });
+  }, section);
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
+  return () => {
+    ctx.revert(); // ✅ SAFE CLEANUP
+  };
+}, []);
+
 
   return (
     <>

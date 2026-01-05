@@ -23,12 +23,7 @@ import {
 type DropdownItem = {
   label: string;
   icon: LucideIcon;
-};
-
-type DropdownProps = {
-  title: string;
-  items: DropdownItem[];
-  base: string;
+  path: string; // ← NEW: explicit path for each item
 };
 
 /* ================= NAVBAR ================= */
@@ -39,7 +34,6 @@ export default function Navbar() {
   >(null);
   const [shrink, setShrink] = useState(false);
 
-  /* Scroll shrink */
   useEffect(() => {
     const onScroll = () => setShrink(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
@@ -48,52 +42,45 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed left-1/2 z-50 w-full -translate-x-1/2 px-4 transition-all duration-300 ${shrink ? "top-2" : "top-4"
-        }`}
+      className={`fixed left-1/2 z-50 w-full -translate-x-1/2 px-4 transition-all duration-300 ${
+        shrink ? "top-2" : "top-4"
+      }`}
     >
       {/* ================= DESKTOP ================= */}
       <nav
         className={`
-    hidden md:flex mx-auto items-center justify-between
-    rounded-full
-     bg-[#0F172A]
-    backdrop-blur-2xl
-    border border-white/40
-    shadow-[0_20px_50px_rgba(0,0,0,0.7)]
-    transition-all duration-300 ease-[cubic-bezier(.4,0,.2,1)]
-
-    ${shrink ? "max-w-4xl px-6 py-2.5 scale-[0.98]" : "max-w-6xl px-8 py-4 scale-100"}
-
-  `}
+          hidden md:flex mx-auto items-center justify-between
+          rounded-full bg-[#0F172A] backdrop-blur-2xl
+          border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.7)]
+          transition-all duration-300 ease-[cubic-bezier(.4,0,.2,1)]
+          ${shrink ? "max-w-4xl px-6 py-2.5 scale-[0.98]" : "max-w-6xl px-8 py-4 scale-100"}
+        `}
       >
         <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/10 via-transparent to-transparent" />
-
 
         {/* LEFT */}
         <div className="flex items-center gap-10 text-sm font-medium text-[#D1D5DB]">
           <DesktopDropdown
             title="Loans for You"
-            base="/loans"
             items={[
-              { label: "Personal Loan", icon: User },
-              { label: "Home Loan", icon: Home },
-              { label: "Vehicle Loan", icon: Car },
-              { label: "Medical Loan", icon: HeartPulse },
-              { label: "Education Loan", icon: GraduationCap },
-              { label: "Gold Loan", icon: Coins },
+              { label: "Personal Loan", icon: User, path: "/personal-loan" },
+              { label: "Home Loan", icon: Home, path: "/home-loan" },
+              { label: "Vehicle Loan", icon: Car, path: "/vehicle-loan" },
+              { label: "Medical Loan", icon: HeartPulse, path: "/medical-loan" },
+              { label: "Education Loan", icon: GraduationCap, path: "/education-loan" },
+              { label: "Gold Loan", icon: Coins, path: "/gold-loan" },
             ]}
           />
 
           <DesktopDropdown
             title="Loan for Business"
-            base="/business-loans"
             items={[
-              { label: "Business Loan", icon: Briefcase },
-              { label: "Working Capital Loan", icon: Wallet },
-              { label: "Term Loan", icon: FileText },
-              { label: "Equipment Loan", icon: Hammer },
-              { label: "Construction Financing", icon: Building },
-              { label: "Loan Against Securities", icon: TrendingUp },
+              { label: "Business Loan", icon: Briefcase, path: "/business-loan" },
+              { label: "Working Capital Loan", icon: Wallet, path: "/working-capital-loan" },
+              { label: "Term Loan", icon: FileText, path: "/term-loan" },
+              { label: "Equipment Loan", icon: Hammer, path: "/equipment-loan" },
+              { label: "Construction Financing", icon: Building, path: "/construction-financing" },
+              { label: "Loan Against Securities", icon: TrendingUp, path: "/loan-against-securities" },
             ]}
           />
         </div>
@@ -119,13 +106,9 @@ export default function Navbar() {
             to="/apply"
             className="
               inline-flex items-center justify-center
-              rounded-full
-              bg-gradient-to-r from-[#9CA3AF] to-[#E5E7EB]
-              px-6 py-2.5
-              text-sm font-semibold
-              text-[#1C1F26]
-              hover:shadow-[0_0_25px_rgba(255,255,255,0.35)]
-              transition-all
+              rounded-full bg-gradient-to-r from-[#9CA3AF] to-[#E5E7EB]
+              px-6 py-2.5 text-sm font-semibold text-[#1C1F26]
+              hover:shadow-[0_0_25px_rgba(255,255,255,0.35)] transition-all
             "
           >
             Apply Now
@@ -137,11 +120,8 @@ export default function Navbar() {
       <div
         className="
           md:hidden flex items-center justify-between
-          px-5 py-4 rounded-2xl
-          bg-[#1C1F26]
-          backdrop-blur-xl
-          border border-white/10
-          shadow-xl
+          px-5 py-4 rounded-2xl bg-[#1C1F26] backdrop-blur-xl
+          border border-white/10 shadow-xl
         "
       >
         <Link to="/" className="text-xl font-semibold text-[#E5E7EB]">
@@ -160,12 +140,8 @@ export default function Navbar() {
       {mobileOpen && (
         <div
           className="
-            md:hidden mt-3 rounded-2xl
-            bg-[#1C1F26]
-            backdrop-blur-xl
-            border border-white/10
-            shadow-xl
-            p-4 space-y-4
+            md:hidden mt-3 rounded-2xl bg-[#1C1F26] backdrop-blur-xl
+            border border-white/10 shadow-xl p-4 space-y-4
           "
         >
           <MobileAccordion
@@ -175,14 +151,13 @@ export default function Navbar() {
               setActiveSection(activeSection === "loans" ? null : "loans")
             }
             items={[
-              "Personal Loan",
-              "Home Loan",
-              "Vehicle Loan",
-              "Medical Loan",
-              "Education Loan",
-              "Gold Loan",
+              { label: "Personal Loan", path: "/personal-loan" },
+              { label: "Home Loan", path: "/home-loan" },
+              { label: "Vehicle Loan", path: "/vehicle-loan" },
+              { label: "Medical Loan", path: "/medical-loan" },
+              { label: "Education Loan", path: "/education-loan" },
+              { label: "Gold Loan", path: "/gold-loan" },
             ]}
-            base="/loans"
             closeMenu={() => setMobileOpen(false)}
           />
 
@@ -190,19 +165,16 @@ export default function Navbar() {
             title="Loan for Business"
             open={activeSection === "business"}
             onClick={() =>
-              setActiveSection(
-                activeSection === "business" ? null : "business"
-              )
+              setActiveSection(activeSection === "business" ? null : "business")
             }
             items={[
-              "Business Loan",
-              "Working Capital Loan",
-              "Term Loan",
-              "Equipment Loan",
-              "Construction Financing",
-              "Loan Against Securities",
+              { label: "Business Loan", path: "/business-loan" },
+              { label: "Working Capital Loan", path: "/working-capital-loan" },
+              { label: "Term Loan", path: "/term-loan" },
+              { label: "Equipment Loan", path: "/equipment-loan" },
+              { label: "Construction Financing", path: "/construction-financing" },
+              { label: "Loan Against Securities", path: "/loan-against-securities" },
             ]}
-            base="/business-loans"
             closeMenu={() => setMobileOpen(false)}
           />
 
@@ -232,7 +204,13 @@ export default function Navbar() {
 }
 
 /* ================= DESKTOP DROPDOWN ================= */
-function DesktopDropdown({ title, items, base }: DropdownProps) {
+function DesktopDropdown({
+  title,
+  items,
+}: {
+  title: string;
+  items: DropdownItem[];
+}) {
   return (
     <div className="relative group">
       <span className="cursor-pointer text-[#D1D5DB] hover:text-[#E5E7EB] transition">
@@ -242,21 +220,17 @@ function DesktopDropdown({ title, items, base }: DropdownProps) {
       <div className="absolute left-0 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
         <div className="w-72 rounded-2xl bg-[#1C1F26] border border-white/10 shadow-xl">
           <ul className="p-4 space-y-1">
-            {items.map(({ label, icon: Icon }) => (
-              <li key={label}>
+            {items.map((item) => (
+              <li key={item.label}>
                 <Link
-                  to={`${base}/${label.toLowerCase().replace(/\s/g, "-")}`}
+                  to={item.path}
                   className="
-                    flex items-center gap-3
-                    rounded-xl px-3 py-2
-                    text-[#D1D5DB]
-                    hover:bg-white/5
-                    hover:text-[#E5E7EB]
-                    transition
+                    flex items-center gap-3 rounded-xl px-3 py-2
+                    text-[#D1D5DB] hover:bg-white/5 hover:text-[#E5E7EB] transition
                   "
                 >
-                  <Icon size={16} className="text-[#9CA3AF]" />
-                  {label}
+                  <item.icon size={16} className="text-[#9CA3AF]" />
+                  {item.label}
                 </Link>
               </li>
             ))}
@@ -273,14 +247,12 @@ function MobileAccordion({
   open,
   onClick,
   items,
-  base,
   closeMenu,
 }: {
   title: string;
   open: boolean;
   onClick: () => void;
-  items: string[];
-  base: string;
+  items: { label: string; path: string }[];
   closeMenu: () => void;
 }) {
   return (
@@ -301,12 +273,12 @@ function MobileAccordion({
         <div className="bg-white/5 px-4 py-3 space-y-2 text-sm">
           {items.map((item) => (
             <Link
-              key={item}
-              to={`${base}/${item.toLowerCase().replace(/\s/g, "-")}`}
+              key={item.label}
+              to={item.path}
               onClick={closeMenu}
               className="block text-[#D1D5DB] hover:text-[#E5E7EB] transition"
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </div>
