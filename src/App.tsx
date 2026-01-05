@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+import { Suspense } from "react";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import PersonalLoanPage from "./pages/personalLoanPage";
+import PersonalLoanPage from "./pages/PersonalLoanPage";
 
 export default function App() {
   return (
@@ -11,10 +12,15 @@ export default function App() {
       <Navbar />
 
       <main className="min-h-screen">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/loans/personal-loan" element={<PersonalLoanPage />} />
-        </Routes>
+        <Suspense fallback={<div className="p-10 text-white">Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/loans/personal-loan"
+              element={<PersonalLoanPage />}
+            />
+          </Routes>
+        </Suspense>
       </main>
 
       <Footer />

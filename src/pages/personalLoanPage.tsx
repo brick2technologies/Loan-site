@@ -11,12 +11,12 @@ import CTASection from "../components/personal-loan/CTASection";
 import FAQ from "../components/personal-loan/FAQ";
 import TypesOfPersonalLoans from "../components/personal-loan/TypeOfLoans";
 import PersonalLoanFeatures from "../components/personal-loan/LoanFeatures";
+// import { useEffect, useState } from "react";
 
 export default function PersonalLoanPage() {
+  
   return (
     <main className="bg-[#E5E7EB]">
-
-      {/* HERO */}
       <HeroSection />
       <LoanOverview />
       <LoanTabs />
@@ -29,7 +29,6 @@ export default function PersonalLoanPage() {
       <WhyChooseUs />
       <CTASection />
       <FAQ />
-
     </main>
   );
 }

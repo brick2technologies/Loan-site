@@ -14,24 +14,30 @@ export default function LoanTabs() {
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    const onScroll = () => {
-      const buffer = 160;
-      for (const tab of tabs) {
-        const section = document.getElementById(tab.id);
-        if (!section) continue;
+  const onScroll = () => {
+    const buffer = 160;
 
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= buffer && rect.bottom > buffer) {
-          setActiveTab(tab.id);
-          break;
-        }
+    for (const tab of tabs) {
+      const section = document.getElementById(tab.id);
+      if (!section) return; // 👈 stop if DOM not ready
+
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= buffer && rect.bottom > buffer) {
+        setActiveTab(tab.id);
+        break;
       }
-    };
+    }
+  };
 
-    onScroll(); // Set initial
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const raf = requestAnimationFrame(onScroll); // 👈 wait for paint
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  return () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener("scroll", onScroll);
+  };
+}, []);
+
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
