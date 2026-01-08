@@ -48,9 +48,11 @@ const points = [
 export default function WhatWeDoSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+const autoSlideRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+
+  /* ================= DESKTOP GSAP ================= */
   useEffect(() => {
-    // 🚫 HARD STOP for mobile/tablet
     if (window.innerWidth < 1024) {
       ScrollTrigger.getAll().forEach((st) => st.kill());
       return;
@@ -79,6 +81,36 @@ export default function WhatWeDoSection() {
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
+    };
+  }, []);
+
+  /* ================= MOBILE AUTO SLIDE ================= */
+  useEffect(() => {
+    if (window.innerWidth >= 1024) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    const cardWidth =
+      track.firstElementChild?.clientWidth ?? 0;
+    const gap = 24; // gap-6 = 24px
+    const step = cardWidth + gap;
+
+    autoSlideRef.current = setInterval(() => {
+      if (
+        track.scrollLeft + track.clientWidth >=
+        track.scrollWidth - 5
+      ) {
+        track.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        track.scrollBy({ left: step, behavior: "smooth" });
+      }
+    }, 2000);
+
+    return () => {
+      if (autoSlideRef.current) {
+        clearInterval(autoSlideRef.current);
+      }
     };
   }, []);
 
@@ -122,9 +154,7 @@ export default function WhatWeDoSection() {
               snap-x snap-mandatory
               lg:overflow-visible
             "
-            style={{
-              WebkitOverflowScrolling: "touch",
-            }}
+            style={{ WebkitOverflowScrolling: "touch" }}
           >
             {points.map((item, index) => {
               const Icon = item.icon;
