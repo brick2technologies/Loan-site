@@ -50,7 +50,7 @@ export default function WhatWeDoSection() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    // ✅ Desktop only (CRITICAL)
+    // ✅ Desktop only
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     if (!isDesktop) return;
 
@@ -77,8 +77,8 @@ export default function WhatWeDoSection() {
     }, section);
 
     return () => {
-      ctx.revert(); // ✅ Scoped & safe cleanup
-      ScrollTrigger.clearScrollMemory(); // ✅ Reset scroll state
+      ctx.revert();
+      ScrollTrigger.clearScrollMemory();
     };
   }, []);
 
@@ -111,7 +111,13 @@ export default function WhatWeDoSection() {
         <div className="relative">
           <div
             ref={trackRef}
-            className="flex gap-8 px-6 w-max will-change-transform"
+            className="
+              flex gap-8 px-6 w-max will-change-transform
+              overflow-x-auto touch-pan-x
+              snap-x snap-mandatory
+              lg:overflow-visible
+              scrollbar-hide
+            "
           >
             {points.map((item, index) => {
               const Icon = item.icon;
@@ -132,6 +138,7 @@ export default function WhatWeDoSection() {
                     text-center
                     transition-transform
                     hover:-translate-y-2
+                    snap-center
                   "
                 >
                   <div className="w-16 h-16 rounded-xl bg-black/5 flex items-center justify-center mb-6">
